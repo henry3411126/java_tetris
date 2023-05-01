@@ -1,2 +1,2 @@
-# java tetris battle
+# Java Tetris Battle
  
