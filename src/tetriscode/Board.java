@@ -129,7 +129,7 @@ public class Board extends JPanel {
             statusbar.setText("Paused");
         } else{
             if(isGameover){
-                var msg = String.format("Game over." + playerName + "'s score: %d", numLinesRemoved);
+                var msg = String.format("Game over. " + playerName + "'s score: %d", numLinesRemoved);
                 statusbar.setText(msg);
             }
             else
@@ -241,13 +241,19 @@ public class Board extends JPanel {
 
             curPiece.setShape(Tetrominoe.NoShape);
             timer.stop();
-            var msg = String.format("Game over." + playerName + "'s score: %d", numLinesRemoved);
+            var msg = String.format("Game over. " + playerName + "'s score: %d", numLinesRemoved);
             statusbar.setText(msg);
             isGameover = true;
+
             if(isPlayer1){
                 parent.sendToServer("GAMEOVER:"+String.valueOf(numLinesRemoved));
+                parent.updateP1Score(numLinesRemoved);
+            }
+            else{
+                parent.updateP2Score(numLinesRemoved);
             }
 
+            this.parent.checkEndGame();
         }
     }
 
@@ -319,10 +325,10 @@ public class Board extends JPanel {
 
     private void drawSquare(Graphics g, int x, int y, Tetrominoe shape) {
 
-        Color colors[] = {new Color(0, 0, 0), new Color(255, 129, 84),
-                new Color(254, 157, 4), new Color(255, 250, 77),
-                new Color(183, 253, 52), new Color(106, 232, 232),
-                new Color(32, 152, 251), new Color(183, 102, 244)
+        Color colors[] = {new Color(0, 0, 0), new Color(112, 113, 252),
+                new Color(255, 60, 60), new Color(86, 216, 137),
+                new Color(254, 217, 83), new Color(76, 213, 230),
+                new Color(246, 142, 80), new Color(235, 92, 130)
         };
 
         var color = colors[shape.ordinal()];
