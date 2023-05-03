@@ -15,13 +15,9 @@ public class TetrisClient extends JFrame{
 
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 600;
-
-	// IO streams
 	DataOutputStream toServer = null;
 	DataInputStream fromServer = null;
 	Socket socket = null;
-
-	//add by henry
 	private JLabel statusbar_p1;
 	private JLabel statusbar_p2;
 	Board board_p1;
@@ -69,10 +65,8 @@ public class TetrisClient extends JFrame{
 		JPanel panel_score = new JPanel(new GridLayout(	1, 2));
 		panel_score.setBackground(new Color(51, 51, 51));
 		statusbar_p1 = new JLabel("Score: 0");
-		//statusbar_p1.setBackground(new Color(51, 51, 51));
 		statusbar_p1.setForeground(Color.WHITE);
 		statusbar_p1.setFont(new Font("", Font.PLAIN, 15));
-		//statusbar_p1.setBackground(new Color(119, 119, 119));
 		panel_score.add(statusbar_p1);
 
 		statusbar_p2 = new JLabel("Waiting");
@@ -328,28 +322,23 @@ public class TetrisClient extends JFrame{
     class HandleAServer implements Runnable {
     	private Socket socket; // Server connected socket
 
-    	/** Construct a thread */
     	public HandleAServer(Socket socket) {
     		this.socket = socket;
     	}
 
-	    /** Run a thread */
     	public void run() {
     		try {
     			fromServer = new DataInputStream(this.socket.getInputStream());
 
     			while(true) {
     				String inText = fromServer.readUTF();
-					//System.out.println(inText);
-
+					System.out.println(inText);
 					if(inText.contains("NAME:")){
 						playerName_p2 = inText.substring(5);
-						//System.out.println(playerName_p1+"     "+inText);
 						board_p2.setName(playerName_p2);
 					}
 					else if(inText.contains("SEED:")){
 						String seed = inText.substring(5);
-						//System.out.println("SEED:" + seed);
 						board_p1.setRandomSeed(Integer.parseInt(seed));
 						board_p2.setRandomSeed(Integer.parseInt(seed));
 						cardLayout.show(mainPanel, "game");
@@ -367,7 +356,6 @@ public class TetrisClient extends JFrame{
 					else if(inText.contains("RANK:")){
 						ObjectInputStream inputStream = new ObjectInputStream(this.socket.getInputStream());
 						String[][] inData = (String[][]) inputStream.readObject();
-						//System.out.println(inData[0][0]+": "+inData[0][1]);
 						creatEndFrame(inData);
 					}
     			}

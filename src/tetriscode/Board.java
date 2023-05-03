@@ -1,6 +1,6 @@
 package tetriscode;
 
-import tetriscode.Shape.Tetrominoe;
+import tetriscode.Shape.ShapeType;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,7 +27,7 @@ public class Board extends JPanel {
     private int curY = 0;
     private JLabel statusbar;
     private Shape curPiece;
-    private Tetrominoe[] board;
+    private ShapeType[] board;
     private Random r;
     TetrisClient parent;
     String playerName;
@@ -40,8 +40,9 @@ public class Board extends JPanel {
         setFocusable(true);
         addKeyListener(new TAdapter());
         curPiece = new Shape();
-        board = new Tetrominoe[BOARD_WIDTH * BOARD_HEIGHT];
+        board = new ShapeType[BOARD_WIDTH * BOARD_HEIGHT];
     }
+
 
     private int squareWidth() {
         return (int) getSize().getWidth() / BOARD_WIDTH;
@@ -51,7 +52,7 @@ public class Board extends JPanel {
         return (int) getSize().getHeight() / BOARD_HEIGHT;
     }
 
-    private Tetrominoe shapeAt(int x, int y) {
+    private ShapeType shapeAt(int x, int y) {
         return board[(y * BOARD_WIDTH) + x];
     }
 
@@ -75,8 +76,8 @@ public class Board extends JPanel {
             case "COMMEND:PAUSE" -> pause();
             case "COMMEND:LEFT" -> tryMove(curPiece, curX - 1, curY);
             case "COMMEND:RIGHT" -> tryMove(curPiece, curX + 1, curY);
-            case "COMMEND:DOWN" -> tryMove(curPiece.rotateRight(), curX, curY);
-            case "COMMEND:UP" -> tryMove(curPiece.rotateLeft(), curX, curY);
+            case "COMMEND:DOWN" -> tryMove(curPiece.rotateClockwise(), curX, curY);
+            case "COMMEND:UP" -> tryMove(curPiece.rotateCounterclockwise(), curX, curY);
             case "COMMEND:SPACE" -> dropDown();
             case "COMMEND:DROP" -> oneLineDown();
         }
@@ -117,17 +118,25 @@ public class Board extends JPanel {
         var size = getSize();
         int boardTop = (int) size.getHeight() - BOARD_HEIGHT * squareHeight();
 
+        g.setColor(new Color(62, 62, 62));
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                Tetrominoe shape = shapeAt(j, BOARD_HEIGHT - i - 1);
-                if (shape != Tetrominoe.NoShape) {
+                g.drawRect(j * squareWidth(), boardTop + i * squareHeight(),
+                        squareWidth(), squareHeight());
+            }
+        }
+
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+            for (int j = 0; j < BOARD_WIDTH; j++) {
+                ShapeType shape = shapeAt(j, BOARD_HEIGHT - i - 1);
+                if (shape != ShapeType.NoShape) {
                     drawSquare(g, j * squareWidth(),
                             boardTop + i * squareHeight(), shape);
                 }
             }
         }
 
-        if (curPiece.getShape() != Tetrominoe.NoShape) {
+        if (curPiece.getShape() != ShapeType.NoShape) {
             for (int i = 0; i < 4; i++) {
                 int x = curX + curPiece.x(i);
                 int y = curY - curPiece.y(i);
@@ -157,7 +166,7 @@ public class Board extends JPanel {
 
     private void clearBoard() {
         for (int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++)
-            board[i] = Tetrominoe.NoShape;
+            board[i] = ShapeType.NoShape;
 
     }
 
@@ -180,7 +189,7 @@ public class Board extends JPanel {
         curY = BOARD_HEIGHT - 1 + curPiece.minY();
 
         if (!tryMove(curPiece, curX, curY)) {
-            curPiece.setShape(Tetrominoe.NoShape);
+            curPiece.setShape(ShapeType.NoShape);
             timer.stop();
             var msg = String.format("Game Over. " + playerName + "'s score: %d", numLinesRemoved);
             statusbar.setText(msg);
@@ -204,7 +213,7 @@ public class Board extends JPanel {
             if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT)
                 return false;
 
-            if (shapeAt(x, y) != Tetrominoe.NoShape)
+            if (shapeAt(x, y) != ShapeType.NoShape)
                 return false;
         }
 
@@ -224,7 +233,7 @@ public class Board extends JPanel {
             boolean lineIsFull = true;
 
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                if (shapeAt(j, i) == Tetrominoe.NoShape) {
+                if (shapeAt(j, i) == ShapeType.NoShape) {
                     lineIsFull = false;
                     break;
                 }
@@ -246,11 +255,11 @@ public class Board extends JPanel {
 
             statusbar.setText(playerName + "'s score: " + numLinesRemoved);
             isFallingFinished = true;
-            curPiece.setShape(Tetrominoe.NoShape);
+            curPiece.setShape(ShapeType.NoShape);
         }
     }
 
-    private void drawSquare(Graphics g, int x, int y, Tetrominoe shape) {
+    private void drawSquare(Graphics g, int x, int y, ShapeType shape) {
 
         Color[] colors = {new Color(0, 0, 0), new Color(112, 113, 252),
                 new Color(255, 60, 60), new Color(86, 216, 137),
@@ -303,7 +312,7 @@ public class Board extends JPanel {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            if (curPiece.getShape() == Tetrominoe.NoShape) {
+            if (curPiece.getShape() == ShapeType.NoShape) {
                 return;
             }
 
@@ -324,11 +333,11 @@ public class Board extends JPanel {
                 }
                 case KeyEvent.VK_DOWN -> {
                     parent.sendToServer("COMMEND:DOWN");
-                    tryMove(curPiece.rotateRight(), curX, curY);
+                    tryMove(curPiece.rotateClockwise(), curX, curY);
                 }
                 case KeyEvent.VK_UP -> {
                     parent.sendToServer("COMMEND:UP");
-                    tryMove(curPiece.rotateLeft(), curX, curY);
+                    tryMove(curPiece.rotateCounterclockwise(), curX, curY);
                 }
                 case KeyEvent.VK_SPACE -> {
                     parent.sendToServer("COMMEND:SPACE");

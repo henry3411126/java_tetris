@@ -18,8 +18,6 @@ public class TetrisServer extends JFrame implements Runnable {
 
 	private static final int WIDTH = 400;
 	private static final int HEIGHT = 300;
-
-
 	private JTextArea ta;
 	private int clientNo = 0;
 	private Map<Integer, Socket> clientMap = new HashMap<Integer, Socket>();
@@ -62,7 +60,6 @@ public class TetrisServer extends JFrame implements Runnable {
 
 
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			System.err.println(e);
 			System.exit(0);
 		}
@@ -89,9 +86,6 @@ public class TetrisServer extends JFrame implements Runnable {
 		this.setJMenuBar(menuBar);
 	}
 
-
-
-
 	private void insertName(int player_id, String player_name) {
 		try {
 			insertStatement.setInt(1, player_id);
@@ -99,13 +93,11 @@ public class TetrisServer extends JFrame implements Runnable {
 			insertStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
 			insertStatement.setInt(4, 0);
 			insertStatement.execute();
-
 			System.out.println("Database Inserted Successfully");
 		} catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
 	}
-
 
 	private void updateScore(int player_id, int score) {
 		try {
@@ -195,8 +187,8 @@ public class TetrisServer extends JFrame implements Runnable {
 					outputToClient1.flush();
 					outputToClient2.writeUTF("SEED:"+seed);
 					outputToClient2.flush();
-					new Thread(new HandleAClient(this.clientMap.get(clientNo-1), this.clientMap.get(clientNo), outputToClient2,clientNo-1)).start();
-					new Thread(new HandleAClient(this.clientMap.get(clientNo), this.clientMap.get(clientNo-1), outputToClient1,clientNo)).start();
+					new Thread(new HandleAClient(this.clientMap.get(clientNo-1), outputToClient2,clientNo-1)).start();
+					new Thread(new HandleAClient(this.clientMap.get(clientNo), outputToClient1,clientNo)).start();
 					this.clientMap.remove(clientNo-1);
 					this.clientMap.remove(clientNo);
 				}
@@ -209,15 +201,13 @@ public class TetrisServer extends JFrame implements Runnable {
 	// Define the thread class for handling new connection
     class HandleAClient implements Runnable {
 		private Socket socket_p1; // A connected socket p1
-		private Socket socket_p2; // A connected socket p2
 		private int clientNum;
 
 		DataOutputStream outputToClient = null;
 
 		/** Construct a thread */
-		public HandleAClient(Socket socket_p1, Socket socket_p2, DataOutputStream outputToClient, int clientNum) {
+		public HandleAClient(Socket socket_p1, DataOutputStream outputToClient, int clientNum) {
 			this.socket_p1 = socket_p1;
-			this.socket_p2 = socket_p2;
 			this.outputToClient = outputToClient;
 			this.clientNum = clientNum;
 		}
@@ -253,7 +243,6 @@ public class TetrisServer extends JFrame implements Runnable {
 						outputToClient.writeUTF("RANK:");
 						outputToClient.flush();
 						delay(100);
-
 
 						// use ObjectOutStream to send rank data
 						ObjectOutputStream outputStream = new ObjectOutputStream(this.socket_p1.getOutputStream());
