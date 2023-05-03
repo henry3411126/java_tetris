@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 
-public class TetrisClient extends JFrame implements Runnable {
+public class TetrisClient extends JFrame{
 
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 600;
@@ -233,8 +233,6 @@ public class TetrisClient extends JFrame implements Runnable {
 		}
 	}
 
-
-
 	public void sendToServer(String outText) {
 		try {
 			if(outText.equals("COMMEND:PAUSE"))
@@ -249,9 +247,19 @@ public class TetrisClient extends JFrame implements Runnable {
 		}
 	}
 
+	public void delay(int ms){
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException ie) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
 	public void checkEndGame(){
-		if(score_p1!=-1 && score_p2!=-1)
+		if(score_p1!=-1 && score_p2!=-1){
+			delay(100);
 			sendToServer("ENDGAME");
+		}
 	}
 
 	public void creatEndFrame(String[][] rank_data){
@@ -287,7 +295,6 @@ public class TetrisClient extends JFrame implements Runnable {
 
 		table_rank.setRowHeight(20);
 
-
 		for(int i=0; i<10; i++){
 			String[] res = new String[3];
 			res[0] = String.valueOf(i+1);
@@ -296,7 +303,6 @@ public class TetrisClient extends JFrame implements Runnable {
 			tableModel.addRow(res);
 		}
 		tableModel.fireTableDataChanged();
-
 
 		JScrollPane sp_rank = new JScrollPane(table_rank);
 
@@ -319,12 +325,6 @@ public class TetrisClient extends JFrame implements Runnable {
 		this.score_p2 = score_p2;
 	}
 
-
-	public void run() {
-
-	}
-
-	// Define the thread class for handling new connection
     class HandleAServer implements Runnable {
     	private Socket socket; // Server connected socket
 
@@ -340,7 +340,7 @@ public class TetrisClient extends JFrame implements Runnable {
 
     			while(true) {
     				String inText = fromServer.readUTF();
-					System.out.println(inText);
+					//System.out.println(inText);
 
 					if(inText.contains("NAME:")){
 						playerName_p2 = inText.substring(5);
@@ -365,11 +365,9 @@ public class TetrisClient extends JFrame implements Runnable {
 						board_p2.streamCommend(inText);
 					}
 					else if(inText.contains("RANK:")){
-
 						ObjectInputStream inputStream = new ObjectInputStream(this.socket.getInputStream());
 						String[][] inData = (String[][]) inputStream.readObject();
-						System.out.println(inData[0][0]+": "+inData[0][1]);
-
+						//System.out.println(inData[0][0]+": "+inData[0][1]);
 						creatEndFrame(inData);
 					}
     			}

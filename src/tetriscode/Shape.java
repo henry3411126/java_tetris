@@ -8,9 +8,8 @@ public class Shape {
         TShape, SquareShape, LShape, MirroredLShape }
 
     private Tetrominoe pieceShape;
-    private int coords[][];
+    private int[][] coords;
     private int[][][] coordsTable;
-
 
     public Shape() {
 
@@ -38,11 +37,7 @@ public class Shape {
     protected void setShape(Tetrominoe shape) {
 
         for (int i = 0; i < 4 ; i++) {
-
-            for (int j = 0; j < 2; ++j) {
-
-                coords[i][j] = coordsTable[shape.ordinal()][i][j];
-            }
+            System.arraycopy(coordsTable[shape.ordinal()][i], 0, coords[i], 0, 2);
         }
 
         pieceShape = shape;
@@ -56,7 +51,6 @@ public class Shape {
 
     public void setRandomShape(Random r) {
 
-        //var r = new Random(seed);
         int x = Math.abs(r.nextInt()) % 7 + 1;
 
         Tetrominoe[] values = Tetrominoe.values();

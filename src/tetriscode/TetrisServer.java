@@ -141,8 +141,12 @@ public class TetrisServer extends JFrame implements Runnable {
 		}
 	}
 
-	public void delay(int x){
-		for(int i=0; i<x;i++){}
+	public void delay(int ms){
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException ie) {
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	@Override
@@ -245,10 +249,11 @@ public class TetrisServer extends JFrame implements Runnable {
 						String[][] data = getScoreRank();
 						System.out.println(Arrays.deepToString(data));
 
-						delay(99999);
+						delay(100);
 						outputToClient.writeUTF("RANK:");
 						outputToClient.flush();
-						delay(30);
+						delay(100);
+
 
 						// use ObjectOutStream to send rank data
 						ObjectOutputStream outputStream = new ObjectOutputStream(this.socket_p1.getOutputStream());
