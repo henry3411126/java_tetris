@@ -1,7 +1,5 @@
 package tetriscode;
 
-import tetriscode.Shape.ShapeType;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -15,65 +13,63 @@ import java.util.Random;
 
 public class Board extends JPanel {
 
+    // define how many pixel in the board (10*20)
     private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 22;
-    private final int PERIOD_INTERVAL = 300;
+
     private Timer timer;
-    private boolean isFallingFinished = false;
-    private boolean isPaused = false;
-    private boolean isGameover = false;
-    private int numLinesRemoved = 0;
+    private boolean isFallingFinished = false;  // set if the piece cannot fall anymore
+    private boolean isPaused = false;           // set if is paused
+    private boolean isGameover = false;         // set if the game is over
+    private boolean isPlayer1;                  // set if is main player
+    private int numLinesRemoved = 0;            // score
+    String playerName;                          // player's name
+    private int squareWidth = 0;                // pixel size: x
+    private int squareHeight = 0;               // pixel size: y
+
+
+    // the coordinate(x, y) of the piece currently using
     private int curX = 0;
     private int curY = 0;
+
+    // for Java frame
     private JLabel statusbar;
-    private Shape curPiece;
-    private ShapeType[] board;
+    private Piece curPiece;
+    private Piece.ShapeType[] board;
     private Random r;
     TetrisClient parent;
-    String playerName;
-    boolean isPlayer1;  //is main player
 
     public Board(TetrisClient parent, JLabel statusbar, boolean isPlayer1) {
         this.parent = parent;
         this.statusbar = statusbar;
         this.isPlayer1 = isPlayer1;
         setFocusable(true);
-        addKeyListener(new TAdapter());
-        curPiece = new Shape();
-        board = new ShapeType[BOARD_WIDTH * BOARD_HEIGHT];
+        addKeyListener(new TKeyAdapter());
+        curPiece = new Piece();
+        board = new Piece.ShapeType[BOARD_WIDTH * BOARD_HEIGHT];
+
     }
 
-
-    private int squareWidth() {
-        return (int) getSize().getWidth() / BOARD_WIDTH;
-    }
-
-    private int squareHeight() {
-        return (int) getSize().getHeight() / BOARD_HEIGHT;
-    }
-
-    private ShapeType shapeAt(int x, int y) {
-        return board[(y * BOARD_WIDTH) + x];
-    }
-
+    // waiting frame
     public void waiting(){
+        // set the pixel size
+        this.squareWidth = (int) getSize().getWidth() / BOARD_WIDTH;
+        this.squareHeight = (int) getSize().getWidth() / BOARD_WIDTH;
         clearBoard();
         repaint();
     }
 
+    // start the game
     public void start() {
         newPiece();
-        timer = new Timer(PERIOD_INTERVAL, new GameCycle());
+        timer = new Timer(500, new GameCycle());
         timer.start();
     }
 
-    public void pausePress(){
-        pause();
-    }
-
+    // streaming the game from server
     public void streamCommend(String inText){
         switch (inText) {
-            case "COMMEND:PAUSE" -> pause();
+            case "COMMEND:PAUSE" -> pausePress();
             case "COMMEND:LEFT" -> tryMove(curPiece, curX - 1, curY);
             case "COMMEND:RIGHT" -> tryMove(curPiece, curX + 1, curY);
             case "COMMEND:DOWN" -> tryMove(curPiece.rotateClockwise(), curX, curY);
@@ -82,16 +78,19 @@ public class Board extends JPanel {
             case "COMMEND:DROP" -> oneLineDown();
         }
     }
+
+    // set the player's name
     public void setName(String playerName){
         this.playerName = playerName;
     }
 
+    // set the seed for random shape
     public void setRandomSeed(int seed){
         r = new Random(seed);
     }
 
-
-    private void pause() {
+    // pause the game
+    public void pausePress() {
         isPaused = !isPaused;
 
         if (isPaused) {
@@ -108,45 +107,44 @@ public class Board extends JPanel {
         repaint();
     }
 
+    // get the type at (x, y)
+    private Piece.ShapeType shapeAt(int x, int y) {
+        return board[(y * BOARD_WIDTH) + x];
+    }
+
+    // paint the frame
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        doDrawing(g);
-    }
-
-    private void doDrawing(Graphics g) {
         var size = getSize();
-        int boardTop = (int) size.getHeight() - BOARD_HEIGHT * squareHeight();
+        int boardTop = (int) size.getHeight() - BOARD_HEIGHT * squareHeight;
 
         g.setColor(new Color(62, 62, 62));
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                g.drawRect(j * squareWidth(), boardTop + i * squareHeight(),
-                        squareWidth(), squareHeight());
+                g.drawRect(j * squareWidth, boardTop + i * squareHeight, squareWidth, squareHeight);
             }
         }
 
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                ShapeType shape = shapeAt(j, BOARD_HEIGHT - i - 1);
-                if (shape != ShapeType.NoShape) {
-                    drawSquare(g, j * squareWidth(),
-                            boardTop + i * squareHeight(), shape);
+                Piece.ShapeType shape = shapeAt(j, BOARD_HEIGHT - i - 1);
+                if (shape != Piece.ShapeType.None) {
+                    drawSquare(g, shape, j * squareWidth, boardTop + i * squareHeight);
                 }
             }
         }
 
-        if (curPiece.getShape() != ShapeType.NoShape) {
+        if (curPiece.getShape() != Piece.ShapeType.None) {
             for (int i = 0; i < 4; i++) {
                 int x = curX + curPiece.x(i);
                 int y = curY - curPiece.y(i);
-                drawSquare(g, x * squareWidth(),
-                        boardTop + (BOARD_HEIGHT - y - 1) * squareHeight(),
-                        curPiece.getShape());
+                drawSquare(g, curPiece.getShape(), x * squareWidth, boardTop + (BOARD_HEIGHT - y - 1) * squareHeight);
             }
         }
     }
 
+    // drop the piece down to the bottom
     private void dropDown() {
         int newY = curY;
 
@@ -158,18 +156,19 @@ public class Board extends JPanel {
         pieceDropped();
     }
 
+    // drop the piece down for one pixel
     private void oneLineDown() {
         if (!tryMove(curPiece, curX, curY - 1))
             pieceDropped();
-
     }
 
+    // clear all the board
     private void clearBoard() {
         for (int i = 0; i < BOARD_HEIGHT * BOARD_WIDTH; i++)
-            board[i] = ShapeType.NoShape;
-
+            board[i] = Piece.ShapeType.None;
     }
 
+    // check of it need to clear whole line and add new piece
     private void pieceDropped() {
         for (int i = 0; i < 4; i++) {
             int x = curX + curPiece.x(i);
@@ -183,18 +182,21 @@ public class Board extends JPanel {
             newPiece();
     }
 
+    // add new piece
     private void newPiece() {
         curPiece.setRandomShape(r);
         curX = BOARD_WIDTH / 2 + 1;
         curY = BOARD_HEIGHT - 1 + curPiece.minY();
 
+        // if no space for new piece
         if (!tryMove(curPiece, curX, curY)) {
-            curPiece.setShape(ShapeType.NoShape);
+            curPiece.setShape(Piece.ShapeType.None);
             timer.stop();
             var msg = String.format("Game Over. " + playerName + "'s score: %d", numLinesRemoved);
             statusbar.setText(msg);
             isGameover = true;
             if(isPlayer1){
+                //send to the sever GAME OVER
                 parent.sendToServer("GAMEOVER:"+numLinesRemoved);
                 parent.updateP1Score(numLinesRemoved);
             }
@@ -206,26 +208,25 @@ public class Board extends JPanel {
         }
     }
 
-    private boolean tryMove(Shape newPiece, int newX, int newY) {
+    // check the piece can move or not
+    private boolean tryMove(Piece newPiece, int newX, int newY) {
         for (int i = 0; i < 4; i++) {
             int x = newX + newPiece.x(i);
             int y = newY - newPiece.y(i);
             if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT)
                 return false;
 
-            if (shapeAt(x, y) != ShapeType.NoShape)
+            if (shapeAt(x, y) != Piece.ShapeType.None)
                 return false;
         }
-
         curPiece = newPiece;
         curX = newX;
         curY = newY;
-
         repaint();
-
         return true;
     }
 
+    // clear the bottom line
     private void removeFullLines() {
         int numFullLines = 0;
 
@@ -233,7 +234,7 @@ public class Board extends JPanel {
             boolean lineIsFull = true;
 
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                if (shapeAt(j, i) == ShapeType.NoShape) {
+                if (shapeAt(j, i) == Piece.ShapeType.None) {
                     lineIsFull = false;
                     break;
                 }
@@ -255,11 +256,12 @@ public class Board extends JPanel {
 
             statusbar.setText(playerName + "'s score: " + numLinesRemoved);
             isFallingFinished = true;
-            curPiece.setShape(ShapeType.NoShape);
+            curPiece.setShape(Piece.ShapeType.None);
         }
     }
 
-    private void drawSquare(Graphics g, int x, int y, ShapeType shape) {
+    // draw the piece
+    private void drawSquare(Graphics g, Piece.ShapeType shape, int x, int y) {
 
         Color[] colors = {new Color(0, 0, 0), new Color(112, 113, 252),
                 new Color(255, 60, 60), new Color(86, 216, 137),
@@ -270,17 +272,17 @@ public class Board extends JPanel {
         var color = colors[shape.ordinal()];
 
         g.setColor(color);
-        g.fillRect(x + 1, y + 1, squareWidth() - 2, squareHeight() - 2);
+        g.fillRect(x + 1, y + 1, squareWidth - 2, squareHeight - 2);
 
         g.setColor(color.brighter());
-        g.drawLine(x, y + squareHeight() - 1, x, y);
-        g.drawLine(x, y, x + squareWidth() - 1, y);
+        g.drawLine(x, y + squareHeight - 1, x, y);
+        g.drawLine(x, y, x + squareWidth - 1, y);
 
         g.setColor(color.darker());
-        g.drawLine(x + 1, y + squareHeight() - 1,
-                x + squareWidth() - 1, y + squareHeight() - 1);
-        g.drawLine(x + squareWidth() - 1, y + squareHeight() - 1,
-                x + squareWidth() - 1, y + 1);
+        g.drawLine(x + 1, y + squareHeight - 1,
+                x + squareWidth - 1, y + squareHeight - 1);
+        g.drawLine(x + squareWidth - 1, y + squareHeight - 1,
+                x + squareWidth - 1, y + 1);
     }
 
     private class GameCycle implements ActionListener {
@@ -308,11 +310,12 @@ public class Board extends JPanel {
         }
     }
 
-    class TAdapter extends KeyAdapter {
+    // handel key press and send the commend to server
+    class TKeyAdapter extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            if (curPiece.getShape() == ShapeType.NoShape) {
+            if (curPiece.getShape() == Piece.ShapeType.None) {
                 return;
             }
 
@@ -321,7 +324,7 @@ public class Board extends JPanel {
             switch (keycode) {
                 case KeyEvent.VK_P -> {
                     parent.sendToServer("COMMEND:PAUSE");
-                    pause();
+                    pausePress();
                 }
                 case KeyEvent.VK_LEFT -> {
                     parent.sendToServer("COMMEND:LEFT");

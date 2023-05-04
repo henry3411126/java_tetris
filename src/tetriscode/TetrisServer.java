@@ -16,12 +16,15 @@ import javax.swing.*;
 
 public class TetrisServer extends JFrame implements Runnable {
 
+	// frame size
 	private static final int WIDTH = 400;
 	private static final int HEIGHT = 300;
-	private JTextArea ta;
-	private int clientNo = 0;
-	private Map<Integer, Socket> clientMap = new HashMap<Integer, Socket>();
-	private Map<Integer, String> clientNameMap = new HashMap<Integer, String>();
+	private JTextArea ta;                                                      // for print the in and out data
+	private int clientNo = 0;                                                  // current number of client in database
+	private Map<Integer, Socket> clientMap = new HashMap<Integer, Socket>();   // for keeping the client's ID and client's socket
+	private Map<Integer, String> clientNameMap = new HashMap<Integer, String>();             // for keeping the client's ID and client's name
+
+	// for MySQL database
 	PreparedStatement insertStatement;
 	Connection con = null;
 
@@ -29,8 +32,13 @@ public class TetrisServer extends JFrame implements Runnable {
 		super("Tetris Server");
 		this.setSize(TetrisServer.WIDTH, TetrisServer.HEIGHT);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		createMenu();
-
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("File");
+		JMenuItem exitItem = new JMenuItem("Exit");
+		exitItem.addActionListener((e) -> System.exit(0));
+		menu.add(exitItem);
+		menuBar.add(menu);
+		this.setJMenuBar(menuBar);
 		ta = new JTextArea(10,10);
 
 		JScrollPane sp = new JScrollPane(ta);
@@ -39,16 +47,17 @@ public class TetrisServer extends JFrame implements Runnable {
 				e.getAdjustable().setValue(e.getAdjustable().getMaximum());
 			}
 		});
-
 		this.add(sp);
 		this.setVisible(true);
 
+		// connect to database
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection
 					("jdbc:mysql://localhost:8889/tetris_java","user01","user01");
 			System.out.println("Database connected");
 
+			// get the current number of database
 			Statement st = con.createStatement();
 			String sql = ("SELECT * FROM player ORDER BY id DESC LIMIT 1;");
 			ResultSet rs = st.executeQuery(sql);
@@ -57,8 +66,6 @@ public class TetrisServer extends JFrame implements Runnable {
 				clientNo = rs.getInt("ID");
 				System.out.println("clientNo: "+clientNo);
 			}
-
-
 		}catch (Exception e) {
 			System.err.println(e);
 			System.exit(0);
@@ -76,16 +83,7 @@ public class TetrisServer extends JFrame implements Runnable {
 		t.start();
 	}
 
-	private void createMenu() {
-		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("File");
-		JMenuItem exitItem = new JMenuItem("Exit");
-		exitItem.addActionListener((e) -> System.exit(0));
-		menu.add(exitItem);
-		menuBar.add(menu);
-		this.setJMenuBar(menuBar);
-	}
-
+	// insert the data to database
 	private void insertName(int player_id, String player_name) {
 		try {
 			insertStatement.setInt(1, player_id);
@@ -99,6 +97,7 @@ public class TetrisServer extends JFrame implements Runnable {
 		}
 	}
 
+	// update the data to database
 	private void updateScore(int player_id, int score) {
 		try {
 			Timestamp cur_time = new Timestamp(System.currentTimeMillis());
@@ -111,6 +110,7 @@ public class TetrisServer extends JFrame implements Runnable {
 		}
 	}
 
+	// get the top 10 scores name and ID
 	private String[][] getScoreRank() {
 		try {
 			Statement st = con.createStatement();
@@ -133,6 +133,7 @@ public class TetrisServer extends JFrame implements Runnable {
 		}
 	}
 
+	// delay the thread (ms)
 	public void delay(int ms){
 		try {
 			Thread.sleep(ms);
@@ -144,15 +145,15 @@ public class TetrisServer extends JFrame implements Runnable {
 	@Override
 	public void run() {
 		try {
-			// Create a server socket
+			// create a server socket
 			ServerSocket serverSocket = new ServerSocket(9898);
 			ta.append("Server started at " + new Date() + '\n');
 
 			while (true) {
-				// Listen for a new connection request
+				// listen for a new connection request
 				Socket socket = serverSocket.accept();
 
-				// Increment clientNo
+				// increment clientNo
 				clientNo++;
 
 				// Find the client's host name, and IP address
@@ -169,6 +170,7 @@ public class TetrisServer extends JFrame implements Runnable {
 				this.clientMap.put(clientNo, socket);
 				this.clientNameMap.put(clientNo, text);
 
+				// if server match two player
 				if(this.clientMap.size() == 2){
 					var r = new Random();
 					int seed = Math.abs(r.nextInt()) % 1000;
@@ -180,7 +182,7 @@ public class TetrisServer extends JFrame implements Runnable {
 					outputToClient2.writeUTF(this.clientNameMap.get(clientNo-1));
 					outputToClient2.flush();
 
-					//do something to let client store the name
+					// delay to let client store the name
 					delay(10);
 
 					outputToClient1.writeUTF("SEED:"+seed);
@@ -198,13 +200,11 @@ public class TetrisServer extends JFrame implements Runnable {
 		}
 	}
 
-	// Define the thread class for handling new connection
+	// define the thread class for handling new connection
     class HandleAClient implements Runnable {
-		private Socket socket_p1; // A connected socket p1
-		private int clientNum;
-
-		DataOutputStream outputToClient = null;
-
+		private Socket socket_p1;                 // socket of p1
+		private int clientNum;                    // the player's ID
+		DataOutputStream outputToClient = null;   // for sending data to client
 		/** Construct a thread */
 		public HandleAClient(Socket socket_p1, DataOutputStream outputToClient, int clientNum) {
 			this.socket_p1 = socket_p1;
@@ -216,19 +216,19 @@ public class TetrisServer extends JFrame implements Runnable {
 		public void run() {
 			try {
 
-				// Create data input and output streams
+				// create data input and output streams
 				ta.append("Starting thread for client "+ this.clientNum + " at " + new Date() + '\n');
 				DataInputStream inputFromClient = new DataInputStream(this.socket_p1.getInputStream());
 				//DataOutputStream outputToClient = new DataOutputStream(this.socket_p2.getOutputStream());
 
-				// Continuously serve the client
+				// continuously serve the client
 				while (true) {
-					// Receive text from the client
+					// receive message from the client and decode them
 					String text = inputFromClient.readUTF();
 					if(text.contains("COMMEND:")){
 						ta.append("client " + this.clientNum + " move: "+ text.substring(8) + '\n');
 
-						// Send text back to other client
+						// send text back to other client
 						outputToClient.writeUTF(text);
 						outputToClient.flush();
 					} else if(text.contains("GAMEOVER:")){

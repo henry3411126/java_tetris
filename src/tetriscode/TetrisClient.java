@@ -13,22 +13,27 @@ import javax.swing.table.JTableHeader;
 
 public class TetrisClient extends JFrame{
 
+	// frame size
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 600;
+
+	// IO stream
 	DataOutputStream toServer = null;
 	DataInputStream fromServer = null;
-	Socket socket = null;
-	private JLabel statusbar_p1;
-	private JLabel statusbar_p2;
-	Board board_p1;
-	Board board_p2;
-	String serverIP;
-	String playerName_p1;
-	String playerName_p2;
+	Socket socket = null;                    // socket to server
+	String serverIP;                         // the IP of server
+	private JLabel statusbar_p1;             // statusbar for player 1
+	private JLabel statusbar_p2;             // statusbar for player 2
+	Board board_p1;                          // board for player 1
+	Board board_p2;                          // board for player 2
+	String playerName_p1;                    // name of player 1
+	String playerName_p2;                    // name of player 2
+	int score_p1 = -1;                       // final score of player 1 (default = -1)
+	int score_p2 = -1;                       // final score of player 2 (default = -1)
+
+	// for Java frame
 	JPanel mainPanel;
 	CardLayout cardLayout;
-	int score_p1 = -1;
-	int score_p2 = -1;
 
 	public TetrisClient() {
 		super("Tetris Client");
@@ -38,11 +43,10 @@ public class TetrisClient extends JFrame{
 		this.cardLayout = new CardLayout();
 		this.mainPanel = new JPanel(this.cardLayout);
 
+		// add a menu bar for exit
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("File");
-
 		JMenuItem exitItem = new JMenuItem("Exit");
-		//exitItem.addActionListener((e) -> System.exit(0));
 		exitItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -59,9 +63,9 @@ public class TetrisClient extends JFrame{
 		menuBar.add(menu);
 		this.setJMenuBar(menuBar);
 
-		//Game frame
+		// Game frame
 		JPanel panel_game = new JPanel(new BorderLayout());
-		//score section
+		// score bar section
 		JPanel panel_score = new JPanel(new GridLayout(	1, 2));
 		panel_score.setBackground(new Color(51, 51, 51));
 		statusbar_p1 = new JLabel("Score: 0");
@@ -74,7 +78,7 @@ public class TetrisClient extends JFrame{
 		statusbar_p2.setFont(new Font("", Font.PLAIN, 15));
 		panel_score.add(statusbar_p2);
 
-		//board section
+		// board section
 		JPanel panel_tetris = new JPanel(new GridLayout(1, 2));
 		panel_tetris.setBorder(BorderFactory.createEmptyBorder(0,1,0,1));
 		board_p1 = new Board(this, statusbar_p1, true);
@@ -91,7 +95,7 @@ public class TetrisClient extends JFrame{
 
 		this.mainPanel.add(panel_game, "game");
 
-		//Start frame
+		// Start frame
 		JPanel panel_start = new JPanel(new BorderLayout());
 
 		JPanel panel_title = new JPanel();
@@ -147,7 +151,6 @@ public class TetrisClient extends JFrame{
 		label_E2.setForeground(new Color(246, 142, 80));
 		label_E2.setFont(new Font("", Font.BOLD, 40));
 		panel_title.add(label_E2);
-
 		panel_start.add(panel_title, BorderLayout.NORTH);
 
 		JPanel panel_login = new JPanel();
@@ -196,7 +199,7 @@ public class TetrisClient extends JFrame{
 
 		this.mainPanel.add(panel_start, "start");
 
-		//Waiting frame
+		// Waiting frame
 		JPanel panel_wait = new JPanel();
 		panel_wait.setBackground(new Color(51, 51, 51));
 		panel_wait.setBorder(new EmptyBorder(new Insets(230, 50, 230, 50)));
@@ -212,6 +215,7 @@ public class TetrisClient extends JFrame{
 		this.setVisible(true);
 	}
 
+	// connect to the server with given IP
 	public boolean connectServer(String serverIP) {
 		try {
 			this.socket = new Socket(serverIP, 9898);
@@ -227,6 +231,7 @@ public class TetrisClient extends JFrame{
 		}
 	}
 
+	// send data to server
 	public void sendToServer(String outText) {
 		try {
 			if(outText.equals("COMMEND:PAUSE"))
@@ -241,6 +246,7 @@ public class TetrisClient extends JFrame{
 		}
 	}
 
+	// delay thread (ms)
 	public void delay(int ms){
 		try {
 			Thread.sleep(ms);
@@ -249,6 +255,7 @@ public class TetrisClient extends JFrame{
 		}
 	}
 
+	// check if two players are both game over
 	public void checkEndGame(){
 		if(score_p1!=-1 && score_p2!=-1){
 			delay(100);
@@ -256,23 +263,26 @@ public class TetrisClient extends JFrame{
 		}
 	}
 
+	// creat the rank list and game result
 	public void creatEndFrame(String[][] rank_data){
 		JPanel panel_end = new JPanel(new BorderLayout(100,50));
 		panel_end.setBackground(new Color(51, 51, 51));
+
+		// game result
 		JLabel label_result =  new JLabel();
 		if(score_p1 > score_p2)
-			label_result.setText("You Win");
+			label_result.setText("You Win! Score: " + score_p1);
 		else if(score_p1 < score_p2)
-			label_result.setText("You Lose");
+			label_result.setText("You Lose. Score: " + score_p1);
 		else
-			label_result.setText("Tie Game");
+			label_result.setText("Tie Game. Score: " + score_p1);
 		label_result.setForeground(Color.WHITE);
 		label_result.setHorizontalAlignment(SwingConstants.CENTER);
 		label_result.setFont(new Font("", Font.BOLD, 30));
 		label_result.setBorder(new EmptyBorder(new Insets(100, 30, 0, 30)));
-
 		panel_end.add(label_result, BorderLayout.NORTH);
 
+		// rank list
 		String[] rank_column = {"Rank", "Name", "Score"};
 		DefaultTableModel tableModel = new DefaultTableModel(null, rank_column);
 		JTable table_rank = new JTable(tableModel);
@@ -311,6 +321,7 @@ public class TetrisClient extends JFrame{
 		this.cardLayout.show(this.mainPanel, "end");
 	}
 
+	// update the score from board
 	public void updateP1Score(int score_p1){
 		this.score_p1 = score_p1;
 	}
@@ -319,8 +330,9 @@ public class TetrisClient extends JFrame{
 		this.score_p2 = score_p2;
 	}
 
+	// the thread for handling server message
     class HandleAServer implements Runnable {
-    	private Socket socket; // Server connected socket
+    	private Socket socket; // Server's socket
 
     	public HandleAServer(Socket socket) {
     		this.socket = socket;
@@ -333,11 +345,14 @@ public class TetrisClient extends JFrame{
     			while(true) {
     				String inText = fromServer.readUTF();
 					System.out.println(inText);
+
+					// decode the server message
 					if(inText.contains("NAME:")){
 						playerName_p2 = inText.substring(5);
 						board_p2.setName(playerName_p2);
 					}
 					else if(inText.contains("SEED:")){
+						// set the random seed for two player
 						String seed = inText.substring(5);
 						board_p1.setRandomSeed(Integer.parseInt(seed));
 						board_p2.setRandomSeed(Integer.parseInt(seed));
@@ -348,12 +363,14 @@ public class TetrisClient extends JFrame{
 						statusbar_p2.setText(playerName_p2 + "'s score: 0");
 					}
 					else if(inText.contains("COMMEND:")){
+						// stream the commend from server
 						if(inText.equals("COMMEND:PAUSE"))
 							board_p1.pausePress();
 
 						board_p2.streamCommend(inText);
 					}
 					else if(inText.contains("RANK:")){
+						// get the rank list from server by using ObjectInputStream
 						ObjectInputStream inputStream = new ObjectInputStream(this.socket.getInputStream());
 						String[][] inData = (String[][]) inputStream.readObject();
 						creatEndFrame(inData);
