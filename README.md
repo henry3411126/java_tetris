@@ -20,15 +20,15 @@ First of all, download the [MAMP](https://www.mamp.info/en/windows/).
 
 After downloading MAMP, open it and click on the "Start" button in the upper right corner to begin.
 
-![MAMP-1](https://github.com/henry3411126/java_tetris/blob/main/image/MAMP-1.jpeg)
+![MAMP-1](image/MAMP-1.jpeg)
 
 After a few seconds, the start icon will turn green. Click on "WebStart" to proceed.
 
-![MAMP-2](https://github.com/henry3411126/java_tetris/blob/main/image/MAMP-2.jpeg)
+![MAMP-2](image/MAMP-2.jpeg)
 
 It will bring us to this page, click on "Tools" in the upper left corner, and then click on "phpMyAdmin".
 
-![phpMyAdmin-1](https://github.com/henry3411126/java_tetris/blob/main/image/phpMyAdmin-1.jpeg)
+![phpMyAdmin-1](image/phpMyAdmin-1.jpeg)
 
 To create a database in phpMyAdmin, follow these steps:
 
@@ -36,7 +36,7 @@ To create a database in phpMyAdmin, follow these steps:
 2. Type the name of the database you want to create (in this example, we'll use "tetris_java").
 3. Click "Create".
 
-![phpMyAdmin-2](https://github.com/henry3411126/java_tetris/blob/main/image/phpMyAdmin-2.jpeg)
+![phpMyAdmin-2](image/phpMyAdmin-2.jpeg)
 
 To create a table in the database you just created, follow these steps:
 
@@ -45,7 +45,7 @@ To create a table in the database you just created, follow these steps:
 3. To add a column, simply click "Go" and a new column will be added.
 4. Once you have finished, click "Save".
 
-![phpMyAdmin-3](https://github.com/henry3411126/java_tetris/blob/main/image/phpMyAdmin-3.jpeg)
+![phpMyAdmin-3](image/phpMyAdmin-3.jpeg)
 
 To create an account to access the database, follow these steps:
 
@@ -54,7 +54,7 @@ To create an account to access the database, follow these steps:
 3. Click "Add user account" at the bottom.
 4. Create an account with the ID "user01" and the password "user01".
 
-![phpMyAdmin-4](https://github.com/henry3411126/java_tetris/blob/main/image/phpMyAdmin-4.jpeg)
+![phpMyAdmin-4](image/phpMyAdmin-4.jpeg)
 
 Remember to check the port number for the database and include it in your code. You can find the place to type it in the TetrisServer file on Line 58.
 
@@ -80,12 +80,12 @@ After that, just type in the players' names and click start. The game will begin
 - D - drop down one line
 - Space - drop down to the bottom
 
-![server](https://github.com/henry3411126/java_tetris/blob/main/image/server.jpeg)
+![server](image/server.jpeg)
 
-![client-1](https://github.com/henry3411126/java_tetris/blob/main/image/client-1.jpeg)
+![client-1](image/client-1.jpeg)
 
 After both players have finished, the game result and score rankings (top 10) will be displayed.
 
-![client-2](https://github.com/henry3411126/java_tetris/blob/main/image/client-2.jpeg)
+![client-2](image/client-2.jpeg)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
