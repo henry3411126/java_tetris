@@ -92,7 +92,7 @@ If you run all the TetrisServer and TetrisClient on the same computer, you don�
 
 If you run the TetrisServer and TetrisClient on the different computer, you need to make sure all the computers are linked to the same subnet network, and find the IP of the computer running the TetrisServer. Then, type this IP in both server IP textboxes on TetrisClient to connect them to the TetrisServer.
 
-After that, just type in the players' names and click start. The game will begin when the server matches two players. You can use the following keys to control the game:
+After that, just type in the player’s name and click start. The game will begin when the server matches two players. When the game start, TetrisServer can monitor all the moves made by players. You can use the following keys to play the game:
 
 - ↑ - rotate (clockwise)
 - ↓ - rotate (counterclockwise)
