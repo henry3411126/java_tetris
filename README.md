@@ -28,7 +28,7 @@ After a few seconds, the start icon will turn green. Click on "WebStart" to proc
 
 It will bring us to this page, click on "Tools" in the upper left corner, and then click on "phpMyAdmin".
 
-![phpMyAdmin-1](image/phpMyAdmin-1.jpeg)
+![phpMyAdmin-1](image/phpMyAdmin-1.png)
 
 To create a database in phpMyAdmin, follow these steps:
 
@@ -36,7 +36,7 @@ To create a database in phpMyAdmin, follow these steps:
 2. Type the name of the database you want to create (in this example, we'll use "tetris_java").
 3. Click "Create".
 
-![phpMyAdmin-2](image/phpMyAdmin-2.jpeg)
+![phpMyAdmin-2](image/phpMyAdmin-2.png)
 
 To create a table in the database you just created, follow these steps:
 
@@ -45,7 +45,7 @@ To create a table in the database you just created, follow these steps:
 3. To add a column, simply click "Go" and a new column will be added.
 4. Once you have finished, click "Save".
 
-![phpMyAdmin-3](image/phpMyAdmin-3.jpeg)
+![phpMyAdmin-3](image/phpMyAdmin-3.png)
 
 To create an account to access the database, follow these steps:
 
@@ -86,6 +86,6 @@ After that, just type in the players' names and click start. The game will begin
 
 After both players have finished, the game result and score rankings (top 10) will be displayed.
 
-![client-2](image/client-2.jpeg)
+![client-2](image/client-2.jpg)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
