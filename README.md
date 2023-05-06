@@ -21,27 +21,28 @@ This is a Tetris game that allows two players to battle each other. This program
 
 To run this game, we need to create a MySQL database to store the score and name. We recommend using [MAMP](https://www.mamp.info/en/windows/) to create a local database.
 
+<br></br>
 First of all, download the [MAMP](https://www.mamp.info/en/windows/). After downloading MAMP, open it and click on the "Start" button in the upper right corner to begin.
 
 <p align="center">
 <img src="image/MAMP-1.jpeg"/>
 </p>
 
-
+<br></br>
 After a few seconds, the start icon will turn green. Click on "WebStart" to proceed.
 
 <p align="center">
 <img src="image/MAMP-2.jpeg"/>
 </p>
 
-
+<br></br>
 It will bring us to this page, click on "Tools" in the upper left corner, and then click on "phpMyAdmin".
 
 <p align="center">
 <img src="image/phpMyAdmin-1.png"/>
 </p>
 
-
+<br></br>
 To create a database in phpMyAdmin, follow these steps:
 
 1. Click on "Databases" in the top menu.
@@ -52,7 +53,7 @@ To create a database in phpMyAdmin, follow these steps:
 <img src="image/phpMyAdmin-2.png"/>
 </p>
 
-
+<br></br>
 To create a table in the database you just created, follow these steps:
 
 1. Click on the database you just created, then click "New".
@@ -64,7 +65,7 @@ To create a table in the database you just created, follow these steps:
 <img src="image/phpMyAdmin-3.png"/>
 </p>
 
-
+<br></br>
 To create an account to access the database, follow these steps:
 
 1. Click the home icon in the top left corner.
@@ -76,12 +77,13 @@ To create an account to access the database, follow these steps:
 <img src="image/phpMyAdmin-4.jpeg"/>
 </p>
 
-
+<br></br>
 Remember to check the port number for the database and include it in your code. You can find the place to type it in the TetrisServer file on Line 58.
 
 ```java
 con = DriverManager.getConnection("jdbc:mysql://localhost:8889/tetris_java","user01","user01");
 ```
+<br></br>
 
 ## How to play
 
@@ -110,10 +112,11 @@ After that, just type in the players' names and click start. The game will begin
 <img src="image/client-1.jpeg"/>
 </p>
 
+<br></br>
 After both players have finished, the game result and score rankings (top 10) will be displayed.
 
 <p align="center">
-<img src="image/client-2.jpeg"/>
+<img src="image/client-2.jpg"/>
 </p>
 
 <p align="right">(<a href="#contents">back to top</a>)</p>
