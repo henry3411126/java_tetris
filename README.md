@@ -2,7 +2,7 @@
 
 # Java Tetris Battle (multiple players)
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled.gif)
+![game](https://github.com/henry3411126/java_tetris/blob/main/image/game.gif)
 
 - <a href="#about-the-project">About The Project</a>
 - <a href="#database-setup">Database Setup</a>
@@ -20,15 +20,15 @@ First of all, download the [MAMP](https://www.mamp.info/en/windows/).
 
 After downloading MAMP, open it and click on the "Start" button in the upper right corner to begin.
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled.jpeg)
+![MAMP-1](https://github.com/henry3411126/java_tetris/blob/main/image/MAMP-1.jpeg)
 
 After a few seconds, the start icon will turn green. Click on "WebStart" to proceed.
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled%201.jpeg)
+![MAMP-2](https://github.com/henry3411126/java_tetris/blob/main/image/MAMP-2.jpeg)
 
 It will bring us to this page, click on "Tools" in the upper left corner, and then click on "phpMyAdmin".
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled.png)
+![phpMyAdmin-1](https://github.com/henry3411126/java_tetris/blob/main/image/phpMyAdmin-1.jpeg)
 
 To create a database in phpMyAdmin, follow these steps:
 
@@ -36,7 +36,7 @@ To create a database in phpMyAdmin, follow these steps:
 2. Type the name of the database you want to create (in this example, we'll use "tetris_java").
 3. Click "Create".
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled%201.png)
+![phpMyAdmin-2](https://github.com/henry3411126/java_tetris/blob/main/image/phpMyAdmin-2.jpeg)
 
 To create a table in the database you just created, follow these steps:
 
@@ -45,7 +45,7 @@ To create a table in the database you just created, follow these steps:
 3. To add a column, simply click "Go" and a new column will be added.
 4. Once you have finished, click "Save".
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled%202.png)
+![phpMyAdmin-3](https://github.com/henry3411126/java_tetris/blob/main/image/phpMyAdmin-3.jpeg)
 
 To create an account to access the database, follow these steps:
 
@@ -54,7 +54,7 @@ To create an account to access the database, follow these steps:
 3. Click "Add user account" at the bottom.
 4. Create an account with the ID "user01" and the password "user01".
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled%202.jpeg)
+![phpMyAdmin-4](https://github.com/henry3411126/java_tetris/blob/main/image/phpMyAdmin-4.jpeg)
 
 Remember to check the port number for the database and include it in your code. You can find the place to type it in the TetrisServer file on Line 58.
 
@@ -80,12 +80,12 @@ After that, just type in the players' names and click start. The game will begin
 - D - drop down one line
 - Space - drop down to the bottom
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled%203.jpeg)
+![server](https://github.com/henry3411126/java_tetris/blob/main/image/server.jpeg)
 
-![Untitled](Project%200a6e370bfd4f454187187a3f73ad3873/Untitled%204.jpeg)
+![client-1](https://github.com/henry3411126/java_tetris/blob/main/image/client-1.jpeg)
 
 After both players have finished, the game result and score rankings (top 10) will be displayed.
 
-![Xnip2023-05-06_18-18-09.jpg](Project%200a6e370bfd4f454187187a3f73ad3873/Xnip2023-05-06_18-18-09.jpg)
+![client-2](https://github.com/henry3411126/java_tetris/blob/main/image/client-2.jpeg)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
