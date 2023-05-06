@@ -2,7 +2,7 @@
 
 # Java Tetris Battle (multiple players)
 
-<p align="right">
+<p align="center">
 <img src="image/game.gif"/>
 </p>
 
