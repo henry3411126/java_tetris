@@ -3,10 +3,6 @@
 # Java Tetris Battle (multiple players)
 
 
-<p align="center">
-<img src="image/game.gif"/>
-</p>
-
 
 
 - <a href="#about-the-project">About The Project</a>
@@ -16,6 +12,11 @@
 ## About The Project
 
 This is a Tetris game that allows two players to battle each other. This program uses client-server architecture. The server uses multithreading to handle multiple players simultaneously. Additionally, the program utilizes a MySQL database to store previous players' scores. After the game, players can view their scores, names, and rankings.
+
+<p align="center">
+<img src="image/game.gif"/>
+</p>
+
 
 ## Database Setup
 
