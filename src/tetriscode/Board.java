@@ -17,15 +17,16 @@ public class Board extends JPanel {
     private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 22;
 
-    private Timer timer;
+
     private boolean isFallingFinished = false;  // set if the piece cannot fall anymore
     private boolean isPaused = false;           // set if is paused
     private boolean isGameover = false;         // set if the game is over
     private boolean isPlayer1;                  // set if is main player
     private int numLinesRemoved = 0;            // score
-    String playerName;                          // player's name
+    private String playerName;                  // player's name
     private int squareWidth = 0;                // pixel size: x
     private int squareHeight = 0;               // pixel size: y
+    private Timer timer;
 
 
     // the coordinate(x, y) of the piece currently using
@@ -61,6 +62,8 @@ public class Board extends JPanel {
 
     // start the game
     public void start() {
+        if(isPlayer1)
+            requestFocus();
         newPiece();
         timer = new Timer(500, new GameCycle());
         timer.start();
@@ -72,8 +75,8 @@ public class Board extends JPanel {
             case "COMMEND:PAUSE" -> pausePress();
             case "COMMEND:LEFT" -> tryMove(curPiece, curX - 1, curY);
             case "COMMEND:RIGHT" -> tryMove(curPiece, curX + 1, curY);
-            case "COMMEND:DOWN" -> tryMove(curPiece.rotateClockwise(), curX, curY);
-            case "COMMEND:UP" -> tryMove(curPiece.rotateCounterclockwise(), curX, curY);
+            case "COMMEND:DOWN" -> tryMove(curPiece.rotateCounterclockwise(), curX, curY);
+            case "COMMEND:UP" -> tryMove(curPiece.rotateClockwise(), curX, curY);
             case "COMMEND:SPACE" -> dropDown();
             case "COMMEND:DROP" -> oneLineDown();
         }
@@ -137,8 +140,8 @@ public class Board extends JPanel {
 
         if (curPiece.getShape() != Piece.ShapeType.None) {
             for (int i = 0; i < 4; i++) {
-                int x = curX + curPiece.x(i);
-                int y = curY - curPiece.y(i);
+                int x = curX + curPiece.getX(i);
+                int y = curY - curPiece.getY(i);
                 drawSquare(g, curPiece.getShape(), x * squareWidth, boardTop + (BOARD_HEIGHT - y - 1) * squareHeight);
             }
         }
@@ -171,8 +174,8 @@ public class Board extends JPanel {
     // check of it need to clear whole line and add new piece
     private void pieceDropped() {
         for (int i = 0; i < 4; i++) {
-            int x = curX + curPiece.x(i);
-            int y = curY - curPiece.y(i);
+            int x = curX + curPiece.getX(i);
+            int y = curY - curPiece.getY(i);
             board[(y * BOARD_WIDTH) + x] = curPiece.getShape();
         }
 
@@ -186,7 +189,7 @@ public class Board extends JPanel {
     private void newPiece() {
         curPiece.setRandomShape(r);
         curX = BOARD_WIDTH / 2 + 1;
-        curY = BOARD_HEIGHT - 1 + curPiece.minY();
+        curY = BOARD_HEIGHT - 1 + curPiece.lowY();
 
         // if no space for new piece
         if (!tryMove(curPiece, curX, curY)) {
@@ -211,8 +214,8 @@ public class Board extends JPanel {
     // check the piece can move or not
     private boolean tryMove(Piece newPiece, int newX, int newY) {
         for (int i = 0; i < 4; i++) {
-            int x = newX + newPiece.x(i);
-            int y = newY - newPiece.y(i);
+            int x = newX + newPiece.getX(i);
+            int y = newY - newPiece.getY(i);
             if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT)
                 return false;
 
@@ -336,11 +339,11 @@ public class Board extends JPanel {
                 }
                 case KeyEvent.VK_DOWN -> {
                     parent.sendToServer("COMMEND:DOWN");
-                    tryMove(curPiece.rotateClockwise(), curX, curY);
+                    tryMove(curPiece.rotateCounterclockwise(), curX, curY);
                 }
                 case KeyEvent.VK_UP -> {
                     parent.sendToServer("COMMEND:UP");
-                    tryMove(curPiece.rotateCounterclockwise(), curX, curY);
+                    tryMove(curPiece.rotateClockwise(), curX, curY);
                 }
                 case KeyEvent.VK_SPACE -> {
                     parent.sendToServer("COMMEND:SPACE");

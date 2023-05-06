@@ -41,8 +41,8 @@ public class Piece {
     }
 
     // get x, y in coordinate
-    public int x(int index) { return coordinate[index][0]; }
-    public int y(int index) { return coordinate[index][1]; }
+    public int getX(int index) { return coordinate[index][0]; }
+    public int getY(int index) { return coordinate[index][1]; }
 
     // set (x, y) in coordinate
     private void setX(int index, int x) { coordinate[index][0] = x; }
@@ -57,8 +57,9 @@ public class Piece {
     }
 
     // get the lowest y in the shape currently using
-    public int minY() {
+    public int lowY() {
         int m = coordinate[0][1];
+
         for (int i=0; i < 4; i++)
             m = Math.min(m, coordinate[i][1]);
 
@@ -69,12 +70,13 @@ public class Piece {
     public Piece rotateClockwise() {
         if (curShape == ShapeType.Square)
             return this;
+
         var result = new Piece();
         result.curShape = curShape;
 
         for (int i = 0; i < 4; ++i) {
-            result.setX(i, y(i));
-            result.setY(i, -x(i));
+            result.setX(i, getY(i));
+            result.setY(i, -getX(i));
         }
         return result;
     }
@@ -88,8 +90,8 @@ public class Piece {
         result.curShape = curShape;
 
         for (int i = 0; i < 4; ++i) {
-            result.setX(i, -y(i));
-            result.setY(i, x(i));
+            result.setX(i, -getY(i));
+            result.setY(i, getX(i));
         }
         return result;
     }

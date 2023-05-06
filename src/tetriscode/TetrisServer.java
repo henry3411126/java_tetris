@@ -53,8 +53,9 @@ public class TetrisServer extends JFrame implements Runnable {
 		// connect to database
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			con = DriverManager.getConnection
-					("jdbc:mysql://localhost:8889/tetris_java","user01","user01");
+
+			// connect the database
+			con = DriverManager.getConnection("jdbc:mysql://localhost:8889/tetris_java","user01","user01");
 			System.out.println("Database connected");
 
 			// get the current number of database
