@@ -1,5 +1,3 @@
-# Project
-
 # Java Tetris Battle (multiple players)
 
 
@@ -118,4 +116,4 @@ After both players have finished, the game result and score rankings (top 10) wi
 <img src="image/client-2.jpeg"/>
 </p>
 
-<p align="right">(<a href="#project">back to top</a>)</p>
+<p align="right">(<a href="#contents">back to top</a>)</p>
