@@ -2,7 +2,7 @@
 
 # Java Tetris Battle (multiple players)
 
-![game](image/game.gif)
+<center>![game](image/game.gif)</center>
 
 - <a href="#about-the-project">About The Project</a>
 - <a href="#database-setup">Database Setup</a>
