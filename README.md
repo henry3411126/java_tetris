@@ -2,9 +2,9 @@
 
 # Java Tetris Battle (multiple players)
 
-<div style="text-align: center">
+<p align="right">
 <img src="image/game.gif"/>
-</div>
+</p>
 
 <center>
 ![game](image/game.gif)
