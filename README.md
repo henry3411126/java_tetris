@@ -83,7 +83,6 @@ Remember to check the port number for the database and include it in your code. 
 ```java
 con = DriverManager.getConnection("jdbc:mysql://localhost:8889/tetris_java","user01","user01");
 ```
-<br></br>
 
 ## How to play
 
