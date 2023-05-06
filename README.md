@@ -78,7 +78,7 @@ To create an account to access the database, follow these steps:
 </p>
 
 <br></br>
-Remember to check the port number for the database and include it in your code. You can find here to modify the code to access database in the TetrisServer file on Line 58.
+Remember to check the port number for the database and include it in your code. You can find the code for connecting database in the TetrisServer file on Line 58.
 
 ```java
 con = DriverManager.getConnection("jdbc:mysql://localhost:8889/tetris_java","user01","user01");
