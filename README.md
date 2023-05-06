@@ -22,7 +22,7 @@ This is a Tetris game that allows two players to battle each other. This program
 
 To run this game, we need to create a MySQL database to store the score and name. We recommend using [MAMP](https://www.mamp.info/en/windows/) to create a local database.
 
-
+<br></br>
 First of all, download the [MAMP](https://www.mamp.info/en/windows/).
 
 After downloading MAMP, open it and click on the "Start" button in the upper right corner to begin.
