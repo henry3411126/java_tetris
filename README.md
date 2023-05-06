@@ -92,7 +92,7 @@ To play this game, you need to run one TetrisServer on the computer that is runn
 
 If you run all the TetrisServer and TetrisClient on the same computer, you don’t need to type anything in the Server IP textbox on the TetrisClient. It will automatically use 127.0.0.1 (localhost) as the IP.
 
-If you run the TetrisServer on a different computer, you need to make sure all the computers are linked to the same subnet network, and find the IP of the computer running the TetrisServer. Then, type this IP in both server IP textboxes on TetrisClient to connect them to the TetrisServer.
+If you run the TetrisServer and TetrisClient on the different computer, you need to make sure all the computers are linked to the same subnet network, and find the IP of the computer running the TetrisServer. Then, type this IP in both server IP textboxes on TetrisClient to connect them to the TetrisServer.
 
 After that, just type in the players' names and click start. The game will begin when the server matches two players. You can use the following keys to control the game:
 
