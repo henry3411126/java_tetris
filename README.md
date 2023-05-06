@@ -88,4 +88,4 @@ After both players have finished, the game result and score rankings (top 10) wi
 
 ![client-2](image/client-2.jpg)
 
-<p align="right">(<a href="#java-tetris-battle-(multiple-players)">back to top</a>)</p>
+<p align="right">(<a href="#project">back to top</a>)</p>
