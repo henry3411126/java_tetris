@@ -58,7 +58,7 @@ public class TetrisServer extends JFrame implements Runnable {
 			con = DriverManager.getConnection("jdbc:mysql://localhost:8889/tetris_java","user01","user01");
 			System.out.println("Database connected");
 
-			// get the current number of database
+			// get the current ID of database
 			Statement st = con.createStatement();
 			String sql = ("SELECT * FROM player ORDER BY id DESC LIMIT 1;");
 			ResultSet rs = st.executeQuery(sql);
