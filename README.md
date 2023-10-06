@@ -10,7 +10,7 @@
 
 ## About The Project
 
-This is a Tetris game that allows two players to battle each other. This program uses client-server architecture. The server uses multithreading to handle multiple players simultaneously. Additionally, the program utilizes a MySQL database to store previous players' scores. After the game, players can view their scores, names, and rank.
+This program implements a two-player Tetris game with a client-server architecture. The server employs multithreading to manage concurrent players effectively. Furthermore, the application leverages a MySQL database to store historical player scores. After completing a game, players have the option to review their scores, usernames, and ranking.
 
 <p align="center">
 <img src="image/game.gif"/>
